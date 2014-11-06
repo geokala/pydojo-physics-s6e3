@@ -22,18 +22,18 @@ class Generator:
         self.particle = particle
         self.pos = pos
         self.vel = vel
-        
+
 
     def spawn(self):
         return Particle(self.particle.type, self.vel, self.pos)
-            
 
 
-def run(width=100):
+
+def run(width=100, height=70):
     generators = []
     generators.append(Generator(Particle(
                 "smoke",
-                [0, random.randint(0,70)],
+                [0, random.randint(0,height)],
                 [width - random.randint(0,width), 0]
             )
         )
@@ -45,7 +45,7 @@ def run(width=100):
         particles.append(
             Particle(
                 "smoke",
-                [0, random.randint(0,70)],
+                [0, random.randint(0,height)],
                 [width - random.randint(0,width), 0]
         )
     )
