@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+import random
 import time
 
 class Particle:
@@ -21,7 +22,13 @@ def run(width=100):
 
     particles = []
     for i in range(0, 5):
-        particles.append(Particle(10, "smoke", [0, 100], [width/2, 0]))
+        particles.append(
+            Particle(
+                random.randint(3,10),
+                "smoke",
+                [0, random.randint(0,70)],
+                [width - random.randint(0,width), 0])
+        )
 
     while True:
         yield [p.move() for p in particles]
