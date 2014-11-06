@@ -18,7 +18,7 @@ class Particle:
         return self.pos, self.type
 
 
-def run(width=100):
+def run(width=100, height=70):
 
     particles = []
     for i in range(0, 5):
@@ -26,7 +26,7 @@ def run(width=100):
             Particle(
                 random.randint(3,10),
                 "smoke",
-                [0, random.randint(0,70)],
+                [0, random.randint(0,height)],
                 [width - random.randint(0,width), 0])
         )
 
