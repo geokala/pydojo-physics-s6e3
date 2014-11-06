@@ -17,15 +17,17 @@ type_map = {
   "fire" : "/",
 }
 
-def frames():
+class IgnoreCoordinate(BaseException): pass
+
+def test_frames():
     for i in range(10):
         for j in range(10):
             for type in "fog", "fire", "water":
-                yield [(i, j, type), (i * 2, j * 2, type), (i * 3, j * 3, type)]
+                yield [((i, j), type), ((i * 2, j * 2), type), ((i * 3, j * 3), type)]
 
 def get_objects(generator, screen):
     maxy, maxx = screen.getmaxyx()
-    for frame in generator(maxy, maxx):
+    for frame in generator(maxx, maxy):
         log(frame)
         screen.clear()
         for (x, y), object_type in frame:
@@ -35,9 +37,13 @@ def get_objects(generator, screen):
         time.sleep(INTERVAL)
 
 def place_on_screen(screen, x, y, object_type):
-    x, y = translate(screen, x, y)
-    log("x, y: %s, %s" % (x, y))
-    screen.addch(y, x, type_map[object_type])
+    try:
+        x, y = translate(screen, x, y)
+    except IgnoreCoordinate:
+        pass
+    else:
+        log("place_on_screen: %s, %s" % (x, y))
+        screen.addch(y, x, type_map[object_type])
 
 def translate(screen, x, y):
     """Translate the coordinate system from the one from the Physics engine
@@ -51,9 +57,10 @@ def translate(screen, x, y):
     maxy, maxx = screen.getmaxyx()
     log("maxx, maxy: %s, %s" % (maxx, maxy))
     x, y = int(x), int(maxy - y)
-    if not(0 <= x <= maxx and 0 <= y <= maxy):
-        raise RuntimeError("%s, %s not a valid coordinate within %s, %s" % (x, y, maxx, maxy))
-    return x, y
+    if 0 <= x <= maxx and 0 <= y <= maxy:
+        return x, y
+    else:
+        raise IgnoreCoordinate
 
 def main(stdscr):
     get_objects(lookupondarkness.run, stdscr)
